@@ -12,7 +12,7 @@
 
 #define READ_TIMEOUT_MS 100                 // 100 ms
 #define SEND_TIMEOUT_MS 1000                // 1 second
-#define MAX_DATA_LEN 100                    // 100 bytes of data
+#define MAX_DATA_LEN 240                    // 100 bytes of data
 #define MAX_TX_MSG MAX_DATA_LEN + 20
 #define MAX_RX_MSG MAX_DATA_LEN + 28
 #define RX_BUFFER_LEN (MAX_RX_MSG * 3)
