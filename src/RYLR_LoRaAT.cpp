@@ -50,7 +50,7 @@ int RYLR_LoRaAT::setAddress(uint16_t address) {
 }
 
 int RYLR_LoRaAT::setRFParameters(uint8_t spread, uint8_t bandwidth,
-                                 uint8_t coding_rate, uint8_t preamble) {
+                                  uint8_t coding_rate, uint8_t preamble) {
   sprintf(this->tx_buffer, "AT+PARAMETER=%d,%d,%d,%d\r\n", spread, bandwidth,
           coding_rate, preamble);
   this->serial->write(this->tx_buffer, strlen(this->tx_buffer));
@@ -76,7 +76,7 @@ void RYLR_LoRaAT::startTxMessage() {
 
 void RYLR_LoRaAT::addTxData(const char *data) {
   int len = min(strlen(data), size_t(MAX_DATA_LEN - this->tx_index));
-  strncpy(this->tx_buffer + this->tx_index, data, len);
+  memcpy(this->tx_buffer + this->tx_index, data, len);  // fixed: was strncpy
   this->tx_index += len;
 }
 
@@ -292,9 +292,6 @@ int RYLR_LoRaAT::processInput() {
       this->rx_buffer[this->rx_index + read_count] = (char)data;
     read_count += 1;
 
-    // Serial.print("read byte: ");
-    // Serial.println(data);
-
     // Check if we are parsing a RECV message
     if (read_count == 5) {
       if (memcmp(this->rx_buffer + this->rx_index, RECV, strlen(RECV)) == 0) {
@@ -323,7 +320,7 @@ int RYLR_LoRaAT::processInput() {
   }
 
   int msg_start = this->rx_index;
-  // Save the null termination in he buffer
+  // Save the null termination in the buffer
   this->rx_index += read_count + 1;
   return msg_start;
 }
